@@ -1,0 +1,27 @@
+ CREATE DATABASE misc;
+ CREATE USER 'fred'@'localhost' IDENTIFIED BY 'zap';
+ GRANT ALL ON misc.* TO 'fred'@'localhost';
+ CREATE USER 'fred'@'127.0.0.1' IDENTIFIED BY 'zap';
+ GRANT ALL ON misc.* TO 'fred'@'127.00.1';
+ FLUSH PRIVILEGES;
+
+USE misc;
+
+ 1. Create the users table
+ CREATE TABLE users (
+    user_id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(128) NOT NULL,
+    email VARCHAR(128) NOT NULL,
+    password VARCHAR(64) NOT NULL ,
+   INDEX(email)
+ ) ENGINE=InnoDB CHARSET=UTF8;
+
+CREATE TABLE autos (
+    auto_id INT AUTO_INCREMENT PRIMARY KEY,
+    make VARCHAR(255),
+    year INT,
+    mileage INT
+);
+
+ INSERT INTO users (name,email,password) VALUES ('Chuck','csev@umich.edu','123');
+ INSERT INTO users (name,email,password) VALUES ('Glenn','gg@umich.edu','456');
