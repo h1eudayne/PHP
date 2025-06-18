@@ -12,7 +12,6 @@
         unset($_SESSION["success"]);
     }  
  
-    // Check if we are logged in!
     if ( ! isset($_SESSION["account"]) ) { ?>
        <p>Please <a href="login.php">Log In</a> to start.</p>
     <?php } else { ?>
