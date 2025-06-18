@@ -2,7 +2,6 @@
     $guess = '';
     $message = false;
     if ( isset($_POST['guess']) ) {
-        // Trick for integer / numeric parameters
         $guess = $_POST['guess'] + 0;
         if ( $guess == 42 ) {
             $message = "Great job!";

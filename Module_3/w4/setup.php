@@ -1,7 +1,6 @@
 <?php
     require_once "../pdo.php";
 
-    // Run this once to create the table necessary
 
     try {
         $sql = "CREATE TABLE autos (

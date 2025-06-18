@@ -1,7 +1,7 @@
 <?php
     session_start();
     if ( isset($_POST["account"]) && isset($_POST["pw"]) ) {
-        unset($_SESSION["account"]);  // Logout current user
+        unset($_SESSION["account"]);
         if ( $_POST['pw'] == 'umsi' ) {
             $_SESSION["account"] = $_POST["account"];
             $_SESSION["success"] = "Logged in.";
@@ -28,7 +28,6 @@
 <form method="post">
 <p>Account: <input type="text" name="account" value=""></p>
 <p>Password: <input type="text" name="pw" value=""></p>
-<!-- password is umsi -->
 <p><input type="submit" value="Log In">
 <a href="app.php">Cancel</a></p>
 </form>
