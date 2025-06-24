@@ -59,7 +59,7 @@ if (isset($_POST['who']) && isset($_POST['pass'])) {
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-    <title>5bd41f22</title> 
+    <title>564873b6</title> 
 </head>
 <body>
     <h1>Please Login</h1>
