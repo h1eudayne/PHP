@@ -1,1 +1,1 @@
-php -S localhost:8080 -c D:\xamp\php\php.ini
+php -S localhost:80 -c C:\xampp\php\php.ini
