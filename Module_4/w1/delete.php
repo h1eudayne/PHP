@@ -17,7 +17,6 @@ if ( isset($_POST['Delete']) && isset($_POST['profile_id']) ) {
     return;
 }
 
-// Guardian: Make sure that user_id is present
 if ( ! isset($_GET['profile_id']) ) {
     $_SESSION['error'] = "Missing user_id";
     header('Location: index.php');
