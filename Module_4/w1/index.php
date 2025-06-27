@@ -1,9 +1,7 @@
-<?php // Do not put any HTML above this line
-session_start(); // Ensure session is started once, typically handled in pdo.php
-require_once "pdo.php"; // This should ideally start the session as well. Remove session_start() if pdo.php already has it.
+<?php 
+session_start(); 
+require_once "pdo.php"; 
 
-// Fetch all profiles along with the user_id (owner_id)
-// We need user_id to determine if the logged-in user owns the profile
 $stmt = $pdo->query("SELECT profile_id, user_id, first_name, last_name, headline FROM Profile");
 $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
@@ -44,7 +42,7 @@ $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 <tr>
                     <th>Name</th>
                     <th>Headline</th>
-                    <?php if (isset($_SESSION['user_id'])): // Show Action column only if logged in ?>
+                    <?php if (isset($_SESSION['user_id'])):?>
                         <th>Action</th>
                     <?php endif; ?>
                 </tr>
@@ -60,9 +58,9 @@ $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
                         <td>
                             <?= htmlentities($row['headline']) ?>
                         </td>
-                        <?php if (isset($_SESSION['user_id'])): // Only show action links if logged in ?>
+                        <?php if (isset($_SESSION['user_id'])):  ?>
                             <td>
-                                <?php if ($row['user_id'] == $_SESSION['user_id']): // Check ownership ?>
+                                <?php if ($row['user_id'] == $_SESSION['user_id']): ?>
                                     <a href="edit.php?profile_id=<?= htmlentities($row['profile_id']) ?>">Edit</a> /
                                     <a href="delete.php?profile_id=<?= htmlentities($row['profile_id']) ?>">Delete</a>
                                 <?php endif; ?>
@@ -74,7 +72,7 @@ $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
         </table>
     <?php endif; ?>
 
-    <?php if (isset($_SESSION['user_id'])): // "Add New Entry" only if logged in ?>
+    <?php if (isset($_SESSION['user_id'])):?>
         <p><a href="add.php">Add New Entry</a></p>
     <?php endif; ?>
 
