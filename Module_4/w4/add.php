@@ -1,21 +1,16 @@
 <?php
-// add.php - Add New Profile with Education
 require_once "pdo.php";
-require_once "util.php"; // Contains utility functions like flash messages and validation
-// session_start(); // Removed: Session is already started in pdo.php via pdo.php's session_start() check.
+require_once "util.php"; 
 
-// Check if the user is logged in, otherwise redirect to login.php
 if (!isset($_SESSION['user_id'])) {
     $_SESSION['error'] = "Please log in to add a profile.";
     header('Location: login.php');
     return;
 }
 
-// Handle POST request
 if (isset($_POST['first_name']) && isset($_POST['last_name']) && isset($_POST['email']) &&
     isset($_POST['headline']) && isset($_POST['summary'])) {
 
-    // Validate profile data - Pass $_POST values as arguments
     if (validateProfile(
             $_POST['first_name'],
             $_POST['last_name'],
@@ -27,23 +22,19 @@ if (isset($_POST['first_name']) && isset($_POST['last_name']) && isset($_POST['e
         return;
     }
 
-    // Validate position data
     if (validatePos() === false) {
         header("Location: add.php");
         return;
     }
 
-    // Using validateFields for education, assuming 'edu_year' and 'edu_school' prefixes
     if (validateFields("edu_year", "edu_school", "Education") === false) {
         header("Location: add.php");
         return;
     }
 
     try {
-        // Start a transaction for atomicity
         $pdo->beginTransaction();
 
-        // Insert Profile data
         $stmt = $pdo->prepare('INSERT INTO Profile
             (user_id, first_name, last_name, email, headline, summary)
             VALUES (:uid, :fn, :ln, :em, :he, :su)');
@@ -57,13 +48,10 @@ if (isset($_POST['first_name']) && isset($_POST['last_name']) && isset($_POST['e
         ));
         $profile_id = $pdo->lastInsertId();
 
-        // Insert Position data
         insertPosition($pdo, $profile_id); // Changed to insertPosition based on user's util.php
 
-        // Insert Education data
         insertEducation($pdo, $profile_id); // Changed to insertEducation based on user's util.php
 
-        // Commit the transaction
         $pdo->commit();
 
         $_SESSION['success'] = "Profile added";
@@ -71,7 +59,6 @@ if (isset($_POST['first_name']) && isset($_POST['last_name']) && isset($_POST['e
         return;
 
     } catch (PDOException $e) {
-        // Rollback on error
         $pdo->rollBack();
         $_SESSION['error'] = "Database error: " . $e->getMessage();
         error_log("Error adding profile: " . $e->getMessage());
@@ -112,20 +99,16 @@ if (isset($_POST['first_name']) && isset($_POST['last_name']) && isset($_POST['e
             <textarea name="summary" id="summary" rows="8" cols="80" class="form-control"></textarea>
         </p>
 
-        <!-- Education Section -->
         <p>
             Education: <input type="submit" id="addEdu" value="+">
         </p>
         <div id="edu_fields">
-            <!-- Education fields will be added here dynamically -->
         </div>
 
-        <!-- Position Section -->
         <p>
             Position: <input type="submit" id="addPos" value="+">
         </p>
         <div id="position_fields">
-            <!-- Position fields will be added here dynamically -->
         </div>
 
         <p>
@@ -138,7 +121,6 @@ if (isset($_POST['first_name']) && isset($_POST['last_name']) && isset($_POST['e
     countPos = 0;
     countEdu = 0;
 
-    // Function to add a new position field
     function addPositionField() {
         if (countPos >= 9) {
             alert("Maximum of nine position entries exceeded");
@@ -154,7 +136,6 @@ if (isset($_POST['first_name']) && isset($_POST['last_name']) && isset($_POST['e
         );
     }
 
-    // Function to add a new education field
     function addEducationField() {
         if (countEdu >= 9) {
             alert("Maximum of nine education entries exceeded");
@@ -170,22 +151,18 @@ if (isset($_POST['first_name']) && isset($_POST['last_name']) && isset($_POST['e
             '</div>'
         );
 
-        // Apply autocomplete to the newly added school field
         $('.school').autocomplete({
             source: "school.php"
         });
     }
 
     $(document).ready(function () {
-        // Event listener for adding position fields
         $('#addPos').click(function (event) {
-            event.preventDefault(); // Prevent form submission
-            addPositionField();
+            event.preventDefault(); 
         });
 
-        // Event listener for adding education fields
         $('#addEdu').click(function (event) {
-            event.preventDefault(); // Prevent form submission
+            event.preventDefault(); 
             addEducationField();
         });
     });

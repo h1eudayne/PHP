@@ -46,9 +46,7 @@ else
 	}
 }
 
-// Load up the position rows
 $positions = loadEduOrPos($pdo, $_GET["profile_id"], "position");
-// Load up the education rows
 $educations = loadEduOrPos($pdo, $_GET["profile_id"], "education");
 
 ?>

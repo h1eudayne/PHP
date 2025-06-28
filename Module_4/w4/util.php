@@ -1,7 +1,4 @@
 <?php
-// util.php - Utility functions for Resume Registry
-
-// Function to display flash messages
 function flashMessages() {
     if (isset($_SESSION['error'])) {
         echo('<p style="color: red;">' . htmlentities($_SESSION['error']) . "</p>\n");
@@ -13,7 +10,6 @@ function flashMessages() {
     }
 }
 
-// Function to validate profile data
 function validateProfile($firstName, $lastName, $email, $headline, $summary) {
     if (strlen($firstName) == 0 || strlen($lastName) == 0 ||
         strlen($email) == 0 || strlen($headline) == 0 ||
@@ -25,10 +21,9 @@ function validateProfile($firstName, $lastName, $email, $headline, $summary) {
         $_SESSION["error"] = "Email address must contain @";
         return false;
     }
-    return true; // Return true if validation passes
+    return true; 
 }
 
-// Function to validate position data
 function validatePos() {
     for ($i = 1; $i <= 9; $i++) {
         if (!isset($_POST['year' . $i])) continue;
@@ -46,17 +41,13 @@ function validatePos() {
             return false;
         }
     }
-    return true; // Return true if validation passes
+    return true; 
 }
 
-// Function to validate education data (using validateFields)
 function validateEdu() {
-    // This function is often a wrapper for validateFields for clarity
-    // or can be removed if validateFields is called directly.
     return validateFields("edu_year", "edu_school", "Education");
 }
 
-// General function to validate year/other fields (used for positions and education)
 function validateFields($yearField, $otherField, $posOrEdu) {
     for ($i = 1; $i <= 9; $i++) {
         if (!isset($_POST[$yearField . $i])) continue;
@@ -78,7 +69,6 @@ function validateFields($yearField, $otherField, $posOrEdu) {
 }
 
 
-// Function to insert positions into the database
 function insertPosition($pdo, $profile_id) {
     $rank = 1;
     for ($i = 1; $i <= 9; $i++) {
@@ -101,7 +91,6 @@ function insertPosition($pdo, $profile_id) {
     }
 }
 
-// Function to insert education entries into the database
 function insertEducation($pdo, $profile_id) {
     $rank = 1;
     for ($i = 1; $i <= 9; $i++) {
@@ -111,7 +100,6 @@ function insertEducation($pdo, $profile_id) {
         $year = $_POST['edu_year' . $i];
         $school = $_POST['edu_school' . $i];
 
-        // Look up the institution if it exists
         $institution_id = false;
         $stmt = $pdo->prepare('SELECT institution_id FROM Institution WHERE name = :name');
         $stmt->execute(array(':name' => $school));
@@ -120,14 +108,12 @@ function insertEducation($pdo, $profile_id) {
             $institution_id = $row['institution_id'];
         }
 
-        // If the institution does not exist, insert it
         if ($institution_id === false) {
             $stmt = $pdo->prepare('INSERT INTO Institution (name) VALUES (:name)');
             $stmt->execute(array(':name' => $school));
             $institution_id = $pdo->lastInsertId();
         }
 
-        // Insert into Education table
         $stmt = $pdo->prepare('INSERT INTO Education
             (profile_id, institution_id, rank, year)
             VALUES (:pid, :iid, :rank, :year)');
@@ -141,7 +127,6 @@ function insertEducation($pdo, $profile_id) {
     }
 }
 
-// Function to load positions for a profile
 function loadPos($pdo, $profile_id) {
     $stmt = $pdo->prepare('SELECT * FROM Position WHERE profile_id = :pid ORDER BY rank');
     $stmt->execute(array(':pid' => $profile_id));
@@ -149,7 +134,6 @@ function loadPos($pdo, $profile_id) {
     return $positions;
 }
 
-// Function to load education entries for a profile
 function loadEdu($pdo, $profile_id) {
     $stmt = $pdo->prepare('SELECT year, name FROM Education JOIN Institution
         ON Education.institution_id = Institution.institution_id
@@ -159,7 +143,6 @@ function loadEdu($pdo, $profile_id) {
     return $educations;
 }
 
-// Function to load profile (already in pdo.php, but keeping here for completeness if user moves it)
 function loadProfile($pdo, $profile_id, $user_id) {
     $stmt = $pdo->prepare('SELECT * FROM Profile WHERE profile_id = :pid AND user_id = :uid');
     $stmt->execute(array(':pid' => $profile_id, ':uid' => $user_id));
@@ -167,7 +150,6 @@ function loadProfile($pdo, $profile_id, $user_id) {
     return $profile;
 }
 
-// Function to initialize session variables from POST data (for positions/education)
 function initSession($yearName, $otherName) {
     for ($i = 1; $i <= 9; $i++) {
         $year = $yearName . $i;
